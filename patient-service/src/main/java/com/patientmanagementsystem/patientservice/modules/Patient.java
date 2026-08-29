@@ -4,15 +4,20 @@ package com.patientmanagementsystem.patientservice.modules;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
-public class patient {
+@Data
+@NoArgsConstructor
+public class Patient {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @NotNull
     private String name;
@@ -30,5 +35,5 @@ public class patient {
     private LocalDate dateOfBirth;
 
     @NotNull
-    private LocalDate registrationDate;
+    private LocalDate registeredDate;
 }
