@@ -1,1 +1,7 @@
 # Adding develop
+# On adding swagger dependency and some annotations like Operation..etc
+  visiting http://localhost:8080/v3/api-docs
+  get the api docs to visualized properly visit swagger.io to visualized through editor
+
+
+#### learn GRPC
