@@ -1,0 +1,55 @@
+services:
+
+  db:
+    container_name: patient-db
+    image: postgres:14.22-alpine3.23
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: patient-service
+      PGDATA: /data/postgres
+
+    volumes:
+      - patient-db:/data/postgres
+
+    ports:
+      - "5332:5432"
+
+    networks:
+      - patient-network
+
+    restart: unless-stopped
+
+
+  patient-service:
+    container_name: patient-service
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/patient-service
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+
+    depends_on:
+      - db
+
+    networks:
+      - patient-network
+
+    restart: unless-stopped
+
+
+networks:
+  patient-network:
+    driver: bridge
+
+
+volumes:
+  patient-db:
