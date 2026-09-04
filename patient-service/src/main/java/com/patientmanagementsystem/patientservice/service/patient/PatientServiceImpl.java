@@ -4,10 +4,9 @@ package com.patientmanagementsystem.patientservice.service.patient;
 import com.patientmanagementsystem.patientservice.Dto.patient.PatientRequestDto;
 import com.patientmanagementsystem.patientservice.Dto.patient.PatientResponseDto;
 import com.patientmanagementsystem.patientservice.grpc.BillingServiceGrpcClient;
+import com.patientmanagementsystem.patientservice.kafka.KafkaProducer;
 import com.patientmanagementsystem.patientservice.modules.Patient;
 import com.patientmanagementsystem.patientservice.repository.PatientRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +17,20 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+
 
 public class PatientServiceImpl implements PatientService {
 
-    private  PatientRepository patientRepository;
-    private BillingServiceGrpcClient billingServiceGrpcClient;
+    private final PatientRepository patientRepository;
+    private final BillingServiceGrpcClient billingServiceGrpcClient;
+    private final KafkaProducer kafkaProducer;
+
+    public PatientServiceImpl(PatientRepository patientRepository, BillingServiceGrpcClient billingServiceGrpcClient, KafkaProducer kafkaProducer) {
+        this.patientRepository = patientRepository;
+        this.billingServiceGrpcClient = billingServiceGrpcClient;
+        this.kafkaProducer = kafkaProducer;
+    }
+
 
     @Override
     public List<PatientResponseDto> getAllPatients() {
@@ -41,6 +48,7 @@ public class PatientServiceImpl implements PatientService {
         Patient p=patientRepository.save(PatientRequestDto.toPatientModel(patient));
         billingServiceGrpcClient.createBillingAccount(p.getId().toString(),p.getName(),p.getEmail());
 
+        kafkaProducer.sendPatientCreatedEvent(p);
         return PatientResponseDto.toPatientResponseDto(p);
     }
 

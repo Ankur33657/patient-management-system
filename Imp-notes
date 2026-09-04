@@ -5,3 +5,5 @@
 
 
 #### learn GRPC
+
+#docker exec -it kafka /bin/bash -> used to enter inside the terminal of container
