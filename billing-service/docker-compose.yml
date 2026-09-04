@@ -1,20 +1,20 @@
 services:
 
   db:
-    container_name: patient-db
+    container_name: billing-db
     image: postgres:14.22-alpine3.23
 
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: patient-service
+      POSTGRES_DB: billing-service
       PGDATA: /data/postgres
 
     volumes:
-      - patient-db:/data/postgres
+      - billing-db:/data/postgres
 
     ports:
-      - "5332:5432"
+      - "5333:5432"
 
     networks:
       - patient-network
@@ -22,24 +22,24 @@ services:
     restart: unless-stopped
 
 
-  patient-service:
-    container_name: patient-service
+  billing-service:
+    container_name: billing-service
 
     build:
       context: .
       dockerfile: Dockerfile
 
     ports:
-      - "4000:4000"
+      # Spring Boot HTTP
+      - "4001:4001"
+
+      # gRPC
+      - "9001:9001"
 
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/patient-service
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/billing-service
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
-      BILLING_SERVICE_ADDRESS: billing-service
-      BILLING_SERVICE_GRPC_PORT: 9001
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-
 
     depends_on:
       - db
@@ -56,4 +56,4 @@ networks:
 
 
 volumes:
-  patient-db:
+  billing-db:
