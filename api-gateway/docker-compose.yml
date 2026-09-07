@@ -1,0 +1,21 @@
+services:
+
+  api-gateway:
+    container_name: api-gateway
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    ports:
+      - "4004:4004"
+
+    networks:
+      - patient-network
+
+    restart: unless-stopped
+
+
+networks:
+  patient-network:
+    external: true
