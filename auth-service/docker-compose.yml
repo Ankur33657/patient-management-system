@@ -1,0 +1,61 @@
+services:
+
+  db:
+    container_name: auth-db
+    image: postgres:14.22-alpine3.23
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: auth-service
+      PGDATA: /data/postgres
+
+    volumes:
+      - auth-db:/data/postgres
+
+    ports:
+      - "5444:5432"
+
+    networks:
+      - patient-network
+
+    restart: unless-stopped
+
+
+  auth-service:
+    container_name: auth-service
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    ports:
+      # Spring Boot HTTP
+      - "4005:4005"
+
+
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/auth-service
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      JWT_SECRET: 8vK3mQ9xR2pL7wT5yN6cA1sD4fG8hJ0kV3zX7bQ2mP9rL5tY8uI6oE1nC4sW7$@#@jnfjebkegfiugeiobfoiebfoief^%%466t8437bru3bfjksbdbdjfkbkdsaaksjbfsbkjdsbjkbfkjbadsjoasjiopwhjeiwqnklnf
+      JWT_EXPIRATION_TIME: 2592000000 #30days
+
+    depends_on:
+      - db
+
+    networks:
+      - patient-network
+
+    restart: unless-stopped
+
+
+networks:
+  patient-network:
+    external: true
+
+
+volumes:
+  auth-db:
