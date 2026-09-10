@@ -1,10 +1,10 @@
-package com.patientmanagementsystem.apigateway;
+package com.patientmanagementsystem.authservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ApiGatewayApplicationTests {
+class AuthServiceApplicationTests {
 
     @Test
     void contextLoads() {
