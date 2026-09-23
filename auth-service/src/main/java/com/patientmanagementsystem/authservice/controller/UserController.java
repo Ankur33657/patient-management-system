@@ -55,6 +55,7 @@ public class UserController {
             @RequestHeader("X-User-Email") String email) {
 
         log.info("Email is {} and role is {}", email, role);
+        log.info("this is testing log");
 
         return ResponseEntity.status(HttpStatus.OK).body(role);
     }
