@@ -1,6 +1,7 @@
 package com.patientmanagementsystem.authservice.Dto.auth;
 
 
+import com.patientmanagementsystem.authservice.Dto.types.Role;
 import com.patientmanagementsystem.authservice.model.User;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
@@ -28,7 +29,7 @@ public class UserCreateRequestDto {
         newuser.setEmail(user.getEmail());
         newuser.setName(user.getName());
         newuser.setPassword(user.getPassword());
-        newuser.setRole("ROLE_USER");
+        newuser.setRole(Role.PATIENT);
         return newuser;
     }
 }

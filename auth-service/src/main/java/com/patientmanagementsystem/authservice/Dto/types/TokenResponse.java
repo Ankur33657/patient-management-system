@@ -1,4 +1,4 @@
-package com.patientmanagementsystem.authservice.Dto.auth;
+package com.patientmanagementsystem.authservice.Dto.types;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class loginResponseDto {
-
-    private  String JwtToken;
+public class TokenResponse {
+    String email;
+    String role;
+    Long id;
 }

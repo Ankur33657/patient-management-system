@@ -1,8 +1,14 @@
 package com.patientmanagementsystem.authservice.model;
 
+import com.patientmanagementsystem.authservice.Dto.types.Media;
+import com.patientmanagementsystem.authservice.Dto.types.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
@@ -23,5 +29,25 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private String role;
+
+    @Embedded
+    private Media media;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Column(nullable = false)
+    private boolean enabled = true;
+
+    @Column(nullable = false)
+    private boolean accountLocked = false;
+
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    private LocalDateTime lastLoginAt;
 }
