@@ -4,6 +4,7 @@ package com.patientmanagementsystem.authservice.controller;
 import com.patientmanagementsystem.authservice.Dto.auth.UserCreateRequestDto;
 import com.patientmanagementsystem.authservice.Dto.auth.loginRequestDto;
 import com.patientmanagementsystem.authservice.Dto.auth.loginResponseDto;
+import com.patientmanagementsystem.authservice.Dto.types.TokenResponse;
 import com.patientmanagementsystem.authservice.services.Auth.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -41,13 +42,17 @@ public class AuthController {
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<Void> validateToken(@RequestHeader("Authorization") String authHeader){
+    public ResponseEntity<TokenResponse> validateToken(@RequestHeader("Authorization") String authHeader){
         // Authorization: Bearer <token>
         if(authHeader==null || !authHeader.startsWith("Bearer ")) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return   authService.validateToken(authHeader.substring(7))
-                ? ResponseEntity.status(HttpStatus.OK).build()
-                : ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        TokenResponse response= authService.validateToken(authHeader);
+        if(response==null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return  ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 }
