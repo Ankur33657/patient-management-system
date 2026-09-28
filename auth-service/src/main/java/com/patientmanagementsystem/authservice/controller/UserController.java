@@ -1,6 +1,8 @@
 package com.patientmanagementsystem.authservice.controller;
 
 import com.patientmanagementsystem.authservice.Dto.User.UserRoleRequestDto;
+import com.patientmanagementsystem.authservice.Dto.User.userUpdateRequestByAdminDto;
+import com.patientmanagementsystem.authservice.Dto.User.userUpdateRequestDto;
 import com.patientmanagementsystem.authservice.Dto.auth.UserCreateRequestDto;
 import com.patientmanagementsystem.authservice.Dto.User.UserResponseDto;
 import com.patientmanagementsystem.authservice.services.User.UserService;
@@ -36,19 +38,26 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(id));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     @GetMapping("/{userId}")
     public ResponseEntity<UserResponseDto> GetUserById(@PathVariable Long userId){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(userId));
     }
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{userId}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId,@RequestBody  UserResponseDto userDto){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(userId,userDto));
+    public ResponseEntity<UserResponseDto> updateUserByAdmin(@PathVariable Long userId,@RequestBody userUpdateRequestByAdminDto userDto){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.updateUserByAdmin(userId,userDto));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/me")
+    public ResponseEntity<UserResponseDto> updateCurrentUser(@RequestHeader("X-User-ID") String currentUserId,@RequestBody  userUpdateRequestDto userDto){
+        Long id=Long.valueOf(currentUserId);
+        return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(id,userDto));
+    }
+
+
+    @PreAuthorize("hasRole('PATIENT')")
     @GetMapping("/role")
     public ResponseEntity<String> getUserRole(
             @RequestHeader("X-User-Role") String role,

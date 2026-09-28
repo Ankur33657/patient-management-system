@@ -1,19 +1,18 @@
 package com.patientmanagementsystem.authservice.services.User;
 
 import com.patientmanagementsystem.authservice.Dto.User.UserResponseDto;
-import com.patientmanagementsystem.authservice.Dto.types.TokenResponse;
+import com.patientmanagementsystem.authservice.Dto.User.userUpdateRequestByAdminDto;
+import com.patientmanagementsystem.authservice.Dto.User.userUpdateRequestDto;
 import com.patientmanagementsystem.authservice.model.User;
 import com.patientmanagementsystem.authservice.repository.UserRepository;
 import com.patientmanagementsystem.authservice.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.example.commonservice.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 @Slf4j
 @Service
@@ -40,23 +39,36 @@ public class userServiceImpl implements UserService {
 
     @Override
     public UserResponseDto getUserById(Long userId) {
-       User user=userRepository.findById(userId).orElseThrow();
+       User user=userRepository.findById(userId).orElseThrow(()->new NotFoundException("USER_NOT_FOUND"));
         return UserResponseDto.toUserResponse(user);
 
     }
 
     @Override
-    public UserResponseDto updateUser(Long userId, UserResponseDto userDto) {
-        User user=userRepository.findById(userId).orElseThrow();
+    public UserResponseDto updateUser(Long userId, userUpdateRequestDto userDto) {
+        User user=userRepository.findById(userId).orElseThrow( ()-> new NotFoundException("USER_NOT_FOUND"));
         user.setName(userDto.getName());
-        user.setEnabled(userDto.isEnabled());
         user.setMedia(userDto.getMedia());
-        user.setAccountLocked(userDto.isAccountLocked());
         userRepository.save(user);
 
         return  UserResponseDto.toUserResponse(user);
 
 
+    }
+
+    @Override
+    public UserResponseDto updateUserByAdmin(Long userId, userUpdateRequestByAdminDto userDto) {
+        User user=userRepository.findById(userId).orElseThrow();
+        user.setEmail(userDto.getEmail());
+        user.setName(userDto.getName());
+        user.setMedia(userDto.getMedia());
+        user.setAccountLocked(userDto.isAccountLocked());
+        user.setEnabled(userDto.isEnabled());
+        user.setRole(userDto.getRole());
+
+        userRepository.save(user);
+
+        return UserResponseDto.toUserResponse(user);
     }
 
 
