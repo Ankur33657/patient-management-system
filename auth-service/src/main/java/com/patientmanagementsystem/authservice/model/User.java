@@ -1,6 +1,8 @@
 package com.patientmanagementsystem.authservice.model;
 
-import com.patientmanagementsystem.authservice.Dto.types.Media;
+import com.patientmanagementsystem.authservice.Dto.types.Background;
+import org.example.commonservice.types.Information;
+import org.example.commonservice.types.Media;
 import com.patientmanagementsystem.authservice.Dto.types.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -33,8 +35,14 @@ public class User {
     @Embedded
     private Media media;
 
+    @Embedded
+    private Information information;
+
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Embedded
+    private Background background;
 
     @Column(nullable = false)
     private boolean enabled = true;
@@ -50,4 +58,7 @@ public class User {
     private LocalDateTime updatedAt;
 
     private LocalDateTime lastLoginAt;
+
+    private String updatedBy;
+
 }
