@@ -1,6 +1,6 @@
 package com.patientmanagementsystem.authservice.Dto.User;
 
-import com.patientmanagementsystem.authservice.Dto.types.Media;
+import org.example.commonservice.types.Media;
 import com.patientmanagementsystem.authservice.Dto.types.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
