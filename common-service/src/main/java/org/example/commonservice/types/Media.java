@@ -1,4 +1,4 @@
-package com.patientmanagementsystem.authservice.Dto.types;
+package org.example.commonservice.types;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
