@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = {
         "com.patientmanagementsystem.authservice",
-        "org.example.commonservice.exception"
+        "org.example.commonservice"
 })
 public class AuthServiceApplication {
 

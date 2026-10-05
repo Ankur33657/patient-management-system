@@ -1,9 +1,6 @@
 package com.patientmanagementsystem.authservice.services.User;
 
-import com.patientmanagementsystem.authservice.Dto.User.UserResponseDto;
-import com.patientmanagementsystem.authservice.Dto.User.passwordUpdateRequestDto;
-import com.patientmanagementsystem.authservice.Dto.User.userUpdateRequestByAdminDto;
-import com.patientmanagementsystem.authservice.Dto.User.userUpdateRequestDto;
+import com.patientmanagementsystem.authservice.Dto.User.*;
 import com.patientmanagementsystem.authservice.Dto.types.Role;
 import com.patientmanagementsystem.authservice.model.User;
 import com.patientmanagementsystem.authservice.repository.UserRepository;
@@ -80,16 +77,16 @@ public class userServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto updateUserRole(Long userId, Role role) {
+    public UserResponseDto updateUserRole(Long userId, updateRoleRequestDto role) {
         User user= userRepository.findById(userId).orElseThrow(()->new NotFoundException("USER_NOT_FOUND"));
-        user.setRole(role);
+        user.setRole(role.getRole());
         userRepository.save(user);
         return UserResponseDto.toUserResponse(user);
     }
 
     @Override
-    public  Page<UserResponseDto> SearchUser(Pageable pageable){
-        Page<User> users=userRepository.searchByKeyword(pageable);
+    public  Page<UserResponseDto> SearchUser(String keyword,Pageable pageable){
+        Page<User> users=userRepository.searchByKeyword(keyword,pageable);
         return  users.map(user->UserResponseDto.toUserResponse(user));
     }
 

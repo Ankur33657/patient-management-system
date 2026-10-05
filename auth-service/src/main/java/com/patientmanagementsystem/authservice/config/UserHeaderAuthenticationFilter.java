@@ -27,6 +27,8 @@ public class UserHeaderAuthenticationFilter extends OncePerRequestFilter {
         String email = request.getHeader("X-User-Email");
         String role = request.getHeader("X-User-Role");
 
+
+
         if (email != null && role != null) {
 
             List<GrantedAuthority> authorities =

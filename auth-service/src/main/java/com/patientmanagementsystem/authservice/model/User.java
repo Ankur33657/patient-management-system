@@ -38,11 +38,13 @@ public class User {
     @Embedded
     private Information information;
 
+    @Embedded
+    private Background background;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Embedded
-    private Background background;
+
 
     @Column(nullable = false)
     private boolean enabled = true;

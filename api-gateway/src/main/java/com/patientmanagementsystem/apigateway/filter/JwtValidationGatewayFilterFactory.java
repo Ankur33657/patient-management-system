@@ -57,10 +57,13 @@ public class JwtValidationGatewayFilterFactory extends
                                 .header("X-USER-ID", String.valueOf(response.id()))
                                 .build();
 
+
+                        log.info("Mutted {}",mutatedRequest);
+
                         var mutatedExchange = exchange.mutate()
                                 .request(mutatedRequest)
                                 .build();
-
+                        log.info("MuttedExchange {}",mutatedExchange);
                         return chain.filter(mutatedExchange);
                     })
                     .onErrorResume(error -> {

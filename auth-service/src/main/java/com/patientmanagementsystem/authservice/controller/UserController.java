@@ -1,7 +1,6 @@
 package com.patientmanagementsystem.authservice.controller;
 
 import com.patientmanagementsystem.authservice.Dto.User.*;
-import com.patientmanagementsystem.authservice.Dto.types.Role;
 import com.patientmanagementsystem.authservice.services.User.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -48,20 +47,19 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{userId}")
-    public  ResponseEntity<String> deleteUserById(@RequestHeader("X-User-ID") String currentUserId, @PathVariable Long userId){
+    public ResponseEntity<String> deleteUserById(@RequestHeader("X-User-ID") String currentUserId, @PathVariable Long userId){
         if(currentUserId.equals(userId.toString())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("USER_PERMISSION_DENIED_TO_DELETE_OWN_ACCOUNT");
         }
-        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(userService.deleteUserById(userId));
+        return  ResponseEntity.status(HttpStatus.OK).body(userService.deleteUserById(userId));
     }
-
 
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPERVISOR')")
     @GetMapping
-    public ResponseEntity<Page<UserResponseDto>>GetAllUsers(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "20") int size,@RequestParam(defaultValue = "id") String sortBy){
+    public ResponseEntity<Page<UserResponseDto>>GetAllUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size, @RequestParam(defaultValue = "id") String sortBy){
         Sort sort= Sort.by(Sort.Direction.fromString("asc"),sortBy);
-        Pageable pageable=PageRequest.of(page,size,sort);
+        Pageable pageable= PageRequest.of(page,size,sort);
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers(pageable));
     }
 
@@ -73,35 +71,28 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPERVISOR')")
-    @PutMapping("/{userId}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId,@RequestBody userUpdateRequestByAdminDto userDto){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.updateUserByAdmin(userId,userDto));
-    }
-
-
-
-
-    @PreAuthorize("hasAnyRole('ADMIN','SUPERVISOR')")
     @GetMapping("/role")
     public ResponseEntity<String> getUserRole(
             @RequestHeader("X-User-Role") String role) {
         return ResponseEntity.status(HttpStatus.OK).body(role);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{userId}/role")
-    public ResponseEntity<UserResponseDto> updateRole(@PathVariable Long userId, @RequestBody Role role){
+    public ResponseEntity<UserResponseDto> updateRole(@PathVariable Long userId, @RequestBody updateRoleRequestDto role){
         return  ResponseEntity.status(HttpStatus.OK).body(userService.updateUserRole(userId,role));
     }
 
     @PreAuthorize("hasAnyRole('DOCTOR','ADMIN','SUPERVISOR')")
     @GetMapping("/search")
     public ResponseEntity<Page<UserResponseDto>> SearchUser(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size,
-                                                           @RequestParam(defaultValue = "name") String sortBy, @RequestParam(defaultValue = "asc") String sortDirection){
+                                                            @RequestParam(defaultValue = "name") String sortBy, @RequestParam(defaultValue = "asc") String sortDirection, @RequestParam String keyword){
         Sort sort=Sort.by(Sort.Direction.fromString(sortDirection),sortBy);
         Pageable pageable= PageRequest.of(page,size,sort);
-        return ResponseEntity.status(HttpStatus.OK).body(userService.SearchUser(pageable));
+        return ResponseEntity.status(HttpStatus.OK).body(userService.SearchUser(keyword,pageable));
     }
+
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPERVISOR')")
     @GetMapping("/account-status")
@@ -119,7 +110,10 @@ public class UserController {
     }
 
 
-
-
+    @PreAuthorize("hasAnyRole('ADMIN','SUPERVISOR')")
+    @PutMapping("/{userId}")
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId,@RequestBody userUpdateRequestByAdminDto userDto){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.updateUserByAdmin(userId,userDto));
+    }
 
 }
