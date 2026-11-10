@@ -1,5 +1,6 @@
 package org.example.commonservice.types;
 
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Embeddable
 public class Address {
     private String addressLine1;
     private String addressLine2;

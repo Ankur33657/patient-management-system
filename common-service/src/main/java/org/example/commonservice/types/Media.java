@@ -11,6 +11,4 @@ public class Media {
     private String url;
     private String key;
     private String Type;
-
-
 }

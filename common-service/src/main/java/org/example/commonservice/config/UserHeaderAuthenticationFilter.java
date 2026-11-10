@@ -1,4 +1,4 @@
-package com.patientmanagementsystem.authservice.config;
+package org.example.commonservice.config;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,6 +26,7 @@ public class UserHeaderAuthenticationFilter extends OncePerRequestFilter {
 
         String email = request.getHeader("X-User-Email");
         String role = request.getHeader("X-User-Role");
+
 
         if (email != null && role != null) {
 
